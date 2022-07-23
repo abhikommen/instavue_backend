@@ -5,21 +5,22 @@ async function getStories(userId) {
     var result = await fetch(`https://storiesig.info/api/ig/stories/${userId}`)
     var rawJson = await result.json()
     var json = {}
+    json.id = userId
     json.count = rawJson.result.length
     json.story = []
-    
-    rawJson.result.forEach((story)=> {
+
+    rawJson.result.forEach((story) => {
         var item = {}
         item.time = story.taken_at
         item.image_url = story.image_versions2.candidates[0].url
         var vedio = story.video_versions
-        if(vedio!=null){
-            item.video_url = vedio[0].url 
+        if (vedio != null) {
+            item.video_url = vedio[0].url
         }
 
         json.story.push(item)
     })
-    
+
     return json
 }
 
@@ -36,7 +37,7 @@ async function getProfile(userName) {
         "body": null,
         "method": "GET"
     });
-    try{
+    try {
         var json = {}
         var jsonResult = await result.json()
         json.id = jsonResult.result.id
@@ -50,19 +51,19 @@ async function getProfile(userName) {
         json.following = jsonResult.result.edge_follow.count
 
         return json
-    } catch(error){
+    } catch (error) {
         return {
             "error": {
-              "code": 404,
-              "message": "Username not found"
+                "code": 404,
+                "message": "Username not found"
             }
-          }
-    } 
+        }
+    }
 }
 
 const storiesDao = {
     getProfile: getProfile,
-    getStories : getStories
+    getStories: getStories
 }
 
 export default storiesDao
