@@ -12,6 +12,14 @@ router.get('/profile/:userName', async (req, res) => {
     var result = await storiesDao.getProfile(userName)
     res.status(200).send(result)
 })
+
+router.get('/stories/:userid', async (req, res) => {
+    var userId = req.params.userid
+    var result = await storiesDao.getStories(userId)
+    res.status(200).send(result)
+})
+
+
 // define the about route
 router.get('/about', (req, res) => {
     res.send('About birds')
