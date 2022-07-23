@@ -23,6 +23,7 @@ async function getProfile(userName) {
         json.bio = jsonResult.result.biography
         json.name = jsonResult.result.full_name
         json.followers = jsonResult.result.edge_followed_by.count
+        json.posts = jsonResult.result.edge_owner_to_timeline_media.count
         json.following = jsonResult.result.edge_follow.count
 
         return json
