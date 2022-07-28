@@ -44,14 +44,11 @@ async function getProfile(userName) {
         "headers": {
             "accept": "application/json, text/plain, */*",
             "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"103\", \"Chromium\";v=\"103\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"macOS\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
-            "x-token": "null",
-            "x-xsrf-token": "eyJpdiI6IllQODVSUFpNRGp2OFFHZnNSeTk5cWc9PSIsInZhbHVlIjoiSGZ0R1JmS1c1cVp1TWJodzlXQU54bjQ5emFSWlRPR2dMN1lVWExRalNtUk1jVE5oM2dwbjh2cmlsbUU4ZGJYem1QcUNPNFJpSTZrbm9ld2V1YllybFQ2MkRDVnJMOXdTbHJEam1EWWIxOWZncWZzVzVTbzlvVDNjNXhcL2g2b1BvIiwibWFjIjoiNTI2MTJlN2Q1OTU4MDRmODc2MjBlY2VmYzE4YWE5NjdjNzRkNjJkNmRiNjRkOWE0M2VjNDFkNWY2ZjY4ZTBjOCJ9"
         },
         "referrer": "https://storiesig.info/en/",
         "referrerPolicy": "strict-origin-when-cross-origin",
