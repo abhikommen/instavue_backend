@@ -3,25 +3,38 @@ import fetch from 'node-fetch';
 
 async function getStories(userId) {
     var result = await fetch(`https://storiesig.info/api/ig/stories/${userId}`)
-    var rawJson = await result.json()
-    var json = {}
-    json.id = userId
-    json.count = rawJson.result.length
-    json.story = []
+    var rawJson = JSON.stringify( await result.text())
+    var result =   result.status
 
-    rawJson.result.forEach((story) => {
-        var item = {}
-        item.time = story.taken_at
-        item.image_url = story.image_versions2.candidates[0].url
-        var vedio = story.video_versions
-        if (vedio != null) {
-            item.video_url = vedio[0].url
+    if(result === 200){
+
+        var json = {}
+        json.id = userId
+        json.count = rawJson.result.length
+        json.story = []
+    
+        rawJson.result.forEach((story) => {
+            var item = {}
+            item.time = story.taken_at
+            item.image_url = story.image_versions2.candidates[0].url
+            var vedio = story.video_versions
+            if (vedio != null) {
+                item.video_url = vedio[0].url
+            }
+    
+            json.story.push(item)
+        })
+    
+        return json
+    } else {
+        return {
+            "error": {
+                "code": 404,
+                "message": "Username not found"
+            }
         }
+    }
 
-        json.story.push(item)
-    })
-
-    return json
 }
 
 async function getProfile(userName) {
@@ -38,8 +51,8 @@ async function getProfile(userName) {
         "method": "GET"
     });
     try {
-        var json = {}
-        var jsonResult = await result.json()
+        var json = {}       
+        var jsonResult = JSON.stringify(await result.text())
         json.id = jsonResult.result.id
         json.username = jsonResult.result.username
         json.is_private = jsonResult.result.is_private
