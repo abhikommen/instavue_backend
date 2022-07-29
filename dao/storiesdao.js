@@ -11,6 +11,10 @@ async function getStories(userId) {
         json.id = userId
         json.count = rawJson.result.length
         json.story = []
+        rawJson.result.reverse()
+        if(rawJson.result.length > 0){
+            json.last_story_time = rawJson.result[0].taken_at 
+        }
 
         rawJson.result.forEach((story) => {
             var item = {}
@@ -44,8 +48,6 @@ async function getProfile(userName) {
         "headers": {
             "accept": "application/json, text/plain, */*",
             "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"macOS\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
