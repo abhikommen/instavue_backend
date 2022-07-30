@@ -19,6 +19,7 @@ async function getStories(userId) {
         rawJson.result.forEach((story) => {
             var item = {}
             item.time = story.taken_at
+            item.id = userId
             item.image_url = story.image_versions2.candidates[0].url
             var vedio = story.video_versions
             if (vedio != null) {
