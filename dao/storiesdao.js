@@ -53,7 +53,7 @@ async function getStories(userId) {
             var vedio = story.video_versions
             if (vedio != null) {
                 item.video_url = vedio[0].url
-                item.video_duration = story.video_duration 
+                item.video_duration = story.video_duration
             }
 
             json.story.push(item)
@@ -72,7 +72,7 @@ async function getStories(userId) {
 
 }
 
-async function getProfile(userName) {
+async function searchProfile(userName) {
     let result = await fetch(`https://www.instagram.com/web/search/topsearch/?query=${userName}`, {
         "headers": {
             "accept": "*/*",
@@ -116,7 +116,66 @@ async function getProfile(userName) {
     }
 }
 
+
+async function getProfile(userName) {
+
+    let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}`, {
+        "headers": {
+            "accept": "*/*",
+            "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"103\", \"Chromium\";v=\"103\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "x-asbd-id": "198387",
+            "x-csrftoken": "Zet6vVN6xoJp5AqiPL2qG0CRJoCau2dQ",
+            "x-ig-app-id": "936619743392459",
+            "x-ig-www-claim": "hmac.AR24wR_VUVv1fn1tC5fefxoL9BMfXltnklJmoDSI2ZqEOli9",
+            "cookie": "ig_nrcb=1; mid=Yqbj9gAEAAFHFX3vOnYDpa1KbWY_; ig_did=DF072672-127B-4877-A84A-C9E1601BFDD4; datr=RQ2nYoTMcrW-q2ydRxxG2PRu; fbm_124024574287414=base_domain=.instagram.com; csrftoken=Zet6vVN6xoJp5AqiPL2qG0CRJoCau2dQ; ds_user_id=8447464191; sessionid=8447464191%3A9vtTHTpoRVUJvO%3A17; shbid=\"10450\\0548447464191\\0541691144021:01f701719e7f77c25e9d7d6b7bb7744fac70713500ef37c62aea77785ee8216f2bd02595\"; shbts=\"1659608021\\0548447464191\\0541691144021:01f74cbc2f993660f39abbdf4786f8f2cbd1bd3c74433228b88c9557a8f2353c771d635a\"; dpr=2.5; fbsr_124024574287414=8JtAjagoZKbEfb2uO6NkGGUk3tOoj1zX-99EqAZYs8Y.eyJ1c2VyX2lkIjoiMTAwMDAyMDk0NTQ1MjA5IiwiY29kZSI6IkFRQ1BBVUNxTm5YYmJmRHRESWI5QzRHZkZfdF83ODRYUVd1eWdQNzNRNnhSMTRTQ3RiMEJkay14MEJLcHk2TzlpdzlMNzE2NUk1OFVXZklUdEpRQk53a3JuTFc4cFhSRzF2b19NU2U4ZlpPTFNtb1Y2OUVud2dOVXVObGdkNVZPRjZjek1TWnhBTkJicEg5dUFGOTNZd21LNDVEZmg2R0FzV21va3J5YjVHUGNWWFIyVWQ3WWlfcmpZa2QzREI3bWREdGFReGJrNTZzcjljcnJhY1hNSUQ1WG9mTVZsWGtOUUdMUVA3TzFkbHlKa3c0VFdPSnRBdGZQNTAwdGs5VTdPZ3BQbDNYNjFUX1RaZGJSQ0g5Qmk5M0lJZjVlN0ozaVhtNGNPZjlHZGhReWdpdGhmWWFPamoybjhyOVllN1I5MVB2Mm54d1ZhVTZwSDZpZnY5NFFHOHlrIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU9LbGplZklNdE54SEFKZ2VrdE9QTHExWkI4TzByTk1qakdFRm5OVXRVZFZiSGxTa05OTHpmYVpBNTl4TkpZM1pBVEFnRG9tVWFXS1hvamFuN0Z2Y0tpR002enBQVDVzak5VQVpDcWJtMTlHS1JtRVE2Z0ZwVktOZDV5ckxIcDVtSjhzZlJpbGhyZXNLSG9aQ3ZXbDJkdUdkcXdiQ0NjVDlLb1pBRGJUVGMiLCJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTY1OTc5Mjg0N30; rur=\"NAO\\0548447464191\\0541691328919:01f70d4afa8f6a9da452f4facab007c3fbc4e2388f588c30fb1e81f13fe8435ef4561e0c\"",
+            "Referer": "https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        },
+        "body": null,
+        "method": "GET"
+    });
+
+    var code = result.status
+
+    if (code === 200) {
+        let jsonResult = await result.json()
+        let user = jsonResult.data.user
+
+        var profileEntity = new ProfileEntity(
+            user.id,
+            user.username,
+            user.full_name,
+            user.is_private,
+            user.profile_pic_url_hd,
+            user.is_verified,
+            0,
+            user.edge_followed_by.count,
+            user.edge_follow.count,
+            user.biography
+        )
+
+        return profileEntity
+    } else {
+        var errorMessage = await result.text()
+        return {
+            "error": {
+                "code": 404,
+                "message": "user not found"
+            }
+        }
+    }
+}
+
+
+
 const storiesDao = {
+    searchProfile: searchProfile,
     getProfile: getProfile,
     getStories: getStories
 }

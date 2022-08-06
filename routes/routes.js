@@ -7,6 +7,12 @@ router.use((req, res, next) => {
     next()
 })
 // define the home page route
+router.get('/search/:userName', async (req, res) => {
+    var userName = req.params.userName
+    var result = await storiesDao.searchProfile(userName)
+    res.send(result)
+})
+
 router.get('/profile/:userName', async (req, res) => {
     var userName = req.params.userName
     var result = await storiesDao.getProfile(userName)
