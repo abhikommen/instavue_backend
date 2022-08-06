@@ -10,13 +10,13 @@ router.use((req, res, next) => {
 router.get('/profile/:userName', async (req, res) => {
     var userName = req.params.userName
     var result = await storiesDao.getProfile(userName)
-    res.status(200).send(result)
+    res.send(result)
 })
 
 router.get('/stories/:userid', async (req, res) => {
     var userId = req.params.userid
     var result = await storiesDao.getStories(userId)
-    res.status(200).send(result)
+    res.send(result)
 })
 
 
