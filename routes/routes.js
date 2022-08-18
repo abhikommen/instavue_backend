@@ -1,5 +1,8 @@
 import { Router } from 'express'
 import storiesDao from '../dao/storiesdao.js'
+import path from "path"
+
+
 const router = Router()
 
 router.use((req, res, next) => {
@@ -25,10 +28,13 @@ router.get('/stories/:userid', async (req, res) => {
     res.send(result)
 })
 
-
-// define the about route
-router.get('/about', (req, res) => {
-    res.send('About birds')
+router.get('/privacy', (req, res) => {
+    res.sendFile(path.resolve('./assets/privacy.html'))
 })
+
+router.get('/terms_and_conditions', (req, res) => {
+    res.sendFile(path.resolve('./assets/terms.html'))
+})
+
 
 export default router
