@@ -28,6 +28,12 @@ router.get('/stories/:userid', async (req, res) => {
     res.send(result)
 })
 
+router.get('/tray', async(req, res)=> {
+   console.log(req.headers);
+  var result = await storiesDao.getTray(req.headers)
+  res.send(result)
+})
+
 router.get('/privacy', (req, res) => {
     res.sendFile(path.resolve('./assets/privacy.html'))
 })

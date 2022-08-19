@@ -92,6 +92,55 @@ async function getStories(userId) {
 
 }
 
+
+async function getTray(headers) {
+    try {
+      console.log(headers);
+      var result = await fetch("https://i.instagram.com/api/v1/feed/reels_tray/", {
+        "headers": {
+          "accept": "*/*",
+          "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+          "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-site",
+          "x-ig-app-id": headers.appid,
+          "x-ig-www-claim": "0",
+          "cookie": headers.cookie,
+          "Referrer-Policy": "strict-origin-when-cross-origin"
+        },
+        "body": null,
+        "method": "GET"
+      });
+
+        var code = result.status
+
+        if (code === 200) {
+            var rawJson = await result.json()
+            return rawJson
+        } else {
+            var errorMessage = await result.text()
+            return {
+                "error": {
+                    "code": 404,
+                    "message": errorMessage
+                }
+            }
+        }
+    } catch (e) {
+        return {
+            "error": {
+                "code": 404,
+                "message": e.message
+            }
+        }
+    }
+
+}
+
+
 async function searchProfile(userName) {
 
     try {
@@ -206,7 +255,8 @@ async function getProfile(userName) {
 const storiesDao = {
     searchProfile: searchProfile,
     getProfile: getProfile,
-    getStories: getStories
+    getStories: getStories,
+    getTray: getTray
 }
 
 export default storiesDao
