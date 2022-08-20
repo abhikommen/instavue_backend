@@ -141,6 +141,7 @@ async function getTray(headers) {
               let story = {}
               story.time = item.taken_at
               story.id = item.pk
+              story.user_id = tray.user.pk
               story.accessibility_caption = item.accessibility_caption
               story.is_video = item.media_type === 2
 
