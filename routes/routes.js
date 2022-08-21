@@ -29,8 +29,15 @@ router.get('/stories/:userid', async (req, res) => {
 })
 
 router.get('/tray', async(req, res)=> {
-   console.log(req.headers);
+  console.log(req.headers);
   var result = await storiesDao.getTray(req.headers)
+  res.send(result)
+})
+
+router.get('/reels', async(req, res)=> {
+  console.log(req.headers);
+  console.log(req.query.reel_ids)
+  var result = await storiesDao.getReels(req.query.reel_ids, req.headers)
   res.send(result)
 })
 
