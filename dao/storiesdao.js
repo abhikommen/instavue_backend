@@ -1,11 +1,20 @@
 import fetch from 'node-fetch';
+
 import ProfileEntity from './model/profilemodel.js'
+import ErrorModel from './model/error.js'
+import ResultResponse from './model/resultresponse.js'
+import { json } from 'express';
 
 
-async function getStories(userId) {
+async function getStories(userId, headers) {
   let searchedUserId = userId
 
   try {
+
+    if (headers.cookie === undefined || headers.appid === undefined) {
+      throw new Error("Cookie headers not present")
+    }
+
     var result = await fetch(`https://i.instagram.com/api/v1/feed/reels_media/?reel_ids=${userId}`, {
       "headers": {
         "accept": "*/*",
@@ -62,32 +71,22 @@ async function getStories(userId) {
 
           json.story.push(item)
         })
-        return json
+        return new ResultResponse(code, json) 
       } else {
         let json = {}
         json.id = userId
         json.last_story_time = 0
         json.count = 0
         json.story = []
-        return json
+        return new ResultResponse(code, json) 
       }
 
     } else {
       var errorMessage = await result.text()
-      return {
-        "error": {
-          "code": 404,
-          "message": errorMessage
-        }
-      }
+      return new ErrorModel(code, errorMessage)
     }
   } catch (e) {
-    return {
-      "error": {
-        "code": 404,
-        "message": e.message
-      }
-    }
+    return new ErrorModel(code, e.message)
   }
 
 }
@@ -95,20 +94,17 @@ async function getStories(userId) {
 
 async function getTray(headers) {
   try {
+
+    if (headers.cookie === undefined || headers.appid === undefined) {
+      throw new Error("Cookie headers not present")
+    }
+
     var result = await fetch("https://i.instagram.com/api/v1/feed/reels_tray/", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"macOS\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
         "x-ig-app-id": headers.appid,
-        "x-ig-www-claim": "0",
         "cookie": headers.cookie,
-        "Referrer-Policy": "strict-origin-when-cross-origin"
       },
       "body": null,
       "method": "GET"
@@ -135,65 +131,59 @@ async function getTray(headers) {
           tray.user.is_verified,
         )
 
-        if(tray.items !== undefined){
-            let stories = []
-            tray.items.forEach((item) => {
-              let story = {}
-              story.time = item.taken_at
-              story.id = item.pk
-              story.user_id = tray.user.pk
-              story.accessibility_caption = item.accessibility_caption
-              story.is_video = item.media_type === 2
+        if (tray.items !== undefined) {
+          let stories = []
+          tray.items.forEach((item) => {
+            let story = {}
+            story.time = item.taken_at
+            story.id = item.pk
+            story.user_id = tray.user.pk
+            story.accessibility_caption = item.accessibility_caption
+            story.is_video = item.media_type === 2
 
-              story.user = new ProfileEntity(
-                tray.user.pk,
-                tray.user.username,
-                tray.user.full_name,
-                tray.user.is_private,
-                tray.user.profile_pic_url,
-                tray.user.is_verified,
-              )
+            story.user = new ProfileEntity(
+              tray.user.pk,
+              tray.user.username,
+              tray.user.full_name,
+              tray.user.is_private,
+              tray.user.profile_pic_url,
+              tray.user.is_verified,
+            )
 
-              if(story.is_video){
-                story.video_url = item.video_versions[0].url
-                story.video_duration = item.video_duration
-              }
+            if (story.is_video) {
+              story.video_url = item.video_versions[0].url
+              story.video_duration = item.video_duration
+            }
 
-              story.image_url = item.image_versions2.candidates[0].url
-              stories.push(story)
-            });
-            trayJson.stories = stories
+            story.image_url = item.image_versions2.candidates[0].url
+            stories.push(story)
+          });
+          trayJson.stories = stories
         }
 
         jsonArray.push(trayJson)
 
       })
-
-      return jsonArray
+      return new ResultResponse(code, jsonArray)
     } else {
       var errorMessage = await result.text()
-      return {
-        "error": {
-          "code": 404,
-          "message": errorMessage
-        }
-      }
+      return new ErrorModel(code, errorMessage)
     }
   } catch (e) {
-    return {
-      "error": {
-        "code": 404,
-        "message": e.message
-      }
-    }
+    return new ErrorModel(404, e.message)
   }
 
 }
 
 
-async function searchProfile(userName) {
+async function searchProfile(userName, headers) {
 
   try {
+
+    if (headers.cookie === undefined || headers.appid === undefined) {
+      throw new Error("Cookie headers not present")
+    }
+
     let result = await fetch(`https://www.instagram.com/web/search/topsearch/?query=${userName}`, {
       "headers": {
         "accept": "*/*",
@@ -202,6 +192,8 @@ async function searchProfile(userName) {
       "body": null,
       "method": "GET",
       "mode": "cors",
+      "x-ig-app-id": headers.appid,
+      "cookie": headers.cookie,
       "credentials": "include"
     });
 
@@ -224,81 +216,100 @@ async function searchProfile(userName) {
         )
         jsonArray.push(profileEntity)
       })
-      return jsonArray
+      return new ResultResponse(code, jsonArray)
     } else {
       var errorMessage = await result.text()
-      return {
-        "error": {
-          "code": 404,
-          "message": errorMessage
-        }
-      }
+      return new ErrorModel(code, errorMessage)
     }
   } catch (e) {
-    return {
-      "error": {
-        "code": 404,
-        "message": e.message
-      }
-    }
+    return new ErrorModel(404, e.message)
   }
+
 }
 
-async function getReels(ids, headers){
-  let reelsId = ''
-  ids.forEach((id)=> {
-    reelsId += "reel_ids=" + id +  "&"
-  })
-  var result = await fetch(`https://i.instagram.com/api/v1/feed/reels_media/?${reelsId}`, {
-    "headers": {
-      "accept": "*/*",
-      "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-      "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": "\"macOS\"",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-site",
-      "x-asbd-id": "198387",
-      "x-ig-app-id": headers.appid,
-      "x-ig-www-claim": "hmac.AR24wR_VUVv1fn1tC5fefxoL9BMfXltnklJmoDSI2ZqEOl5v",
-      "cookie": headers.cookie,
-      "Referrer-Policy": "strict-origin-when-cross-origin"
-    },
-    "body": null,
-    "method": "GET"
-  });
+async function getReels(ids, headers) {
+  try {
+    console.log(ids)
+    if (ids === undefined) {
+      console.log(ids)
+      return new ResultResponse(200, [])
+    }
+    if (headers.cookie === undefined || headers.appid === undefined) {
+      throw new Error("Cookie headers not present")
+    }
 
-  let rawJson =  await result.json()
-  let jsonArray = []
-  rawJson.reels_media.forEach((tray) => {
-    tray.items.forEach((item) => {
-      let story = {}
-      story.time = item.taken_at
-      story.id = item.pk
-      story.user_id = tray.user.pk
-      story.accessibility_caption = item.accessibility_caption
-      story.is_video = item.media_type === 2
+    let reelsId = ''
 
-      story.user = new ProfileEntity(
-        tray.user.pk,
-        tray.user.username,
-        tray.user.full_name,
-        tray.user.is_private,
-        tray.user.profile_pic_url,
-        tray.user.is_verified,
-      )
+    if (Array.isArray(ids)) {
+      ids.forEach((id) => {
+        reelsId += "reel_ids=" + id + "&"
+      })
+    } else {
+      reelsId = "reel_ids=" + ids
+    }
 
-      if(story.is_video){
-        story.video_url = item.video_versions[0].url
-        story.video_duration = item.video_duration
-      }
+    var result = await fetch(`https://i.instagram.com/api/v1/feed/reels_media/?${reelsId}`, {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "x-asbd-id": "198387",
+        "x-ig-app-id": headers.appid,
+        "cookie": headers.cookie,
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "body": null,
+      "method": "GET"
+    });
 
-      story.image_url = item.image_versions2.candidates[0].url
-      jsonArray.push(story)
-    })
-  })
-return jsonArray
+    var code = result.status
+
+    if (code === 200) {
+      var rawJson = await result.json()
+
+      let jsonArray = []
+      rawJson.reels_media.forEach((tray) => {
+        tray.items.forEach((item) => {
+          let story = {}
+          story.time = item.taken_at
+          story.id = item.pk
+          story.user_id = tray.user.pk
+          story.accessibility_caption = item.accessibility_caption
+          story.is_video = item.media_type === 2
+
+          story.user = new ProfileEntity(
+            tray.user.pk,
+            tray.user.username,
+            tray.user.full_name,
+            tray.user.is_private,
+            tray.user.profile_pic_url,
+            tray.user.is_verified,
+          )
+
+          if (story.is_video) {
+            story.video_url = item.video_versions[0].url
+            story.video_duration = item.video_duration
+          }
+
+          story.image_url = item.image_versions2.candidates[0].url
+          jsonArray.push(story)
+        })
+      })
+      return new ResultResponse(code, jsonArray)
+    } else {
+      var errorMessage = await result.json()
+      return new ErrorModel(code, errorMessage)
+    }
+
+  } catch (error) {
+    return new ErrorModel(404, error.message)
+  }
+
 }
 
 
@@ -364,7 +375,7 @@ const storiesDao = {
   getProfile: getProfile,
   getStories: getStories,
   getTray: getTray,
-  getReels : getReels
+  getReels: getReels
 }
 
 export default storiesDao

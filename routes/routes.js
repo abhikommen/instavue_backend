@@ -12,8 +12,9 @@ router.use((req, res, next) => {
 // define the home page route
 router.get('/search/:userName', async (req, res) => {
     var userName = req.params.userName
-    var result = await storiesDao.searchProfile(userName)
-    res.send(result)
+    var result = await storiesDao.searchProfile(userName, req.headers)
+    console.log(result)
+    res.status(result.code).send(result)
 })
 
 router.get('/profile/:userName', async (req, res) => {
@@ -24,21 +25,18 @@ router.get('/profile/:userName', async (req, res) => {
 
 router.get('/stories/:userid', async (req, res) => {
     var userId = req.params.userid
-    var result = await storiesDao.getStories(userId)
-    res.send(result)
+    var result = await storiesDao.getStories(userId, req.headers)
+    res.status(result.code).send(result)
 })
 
-router.get('/tray', async(req, res)=> {
-  console.log(req.headers);
-  var result = await storiesDao.getTray(req.headers)
-  res.send(result)
+router.get('/tray', async (req, res) => {
+    var result = await storiesDao.getTray(req.headers)
+    res.status(result.code).send(result)
 })
 
-router.get('/reels', async(req, res)=> {
-  console.log(req.headers);
-  console.log(req.query.reel_ids)
-  var result = await storiesDao.getReels(req.query.reel_ids, req.headers)
-  res.send(result)
+router.get('/reels', async (req, res) => {
+    var result = await storiesDao.getReels(req.query.reel_ids, req.headers)
+    res.status(result.code).send(result)
 })
 
 router.get('/privacy', (req, res) => {
