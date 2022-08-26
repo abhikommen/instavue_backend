@@ -5,7 +5,6 @@ import ResultResponse from '../model/resultresponse.js'
 
 
 export async function GetProfile(userName, headers) {
-
   try {
 
     if (headers.cookie === undefined || headers.appid === undefined) {
