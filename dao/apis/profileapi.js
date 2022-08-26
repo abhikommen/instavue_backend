@@ -53,9 +53,9 @@ export async function GetProfile(userName, headers) {
       )
       return new ResultResponse(code, profileEntity)
     } else {
-      return new ErrorModel(404, "Session Expire!!")
+      return new ErrorModel(440, "Session Expire!!")
     }
-  } catch (error) { 
+  } catch (error) {
     return error
   }
 
