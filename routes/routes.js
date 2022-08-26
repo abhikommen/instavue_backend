@@ -13,14 +13,13 @@ router.use((req, res, next) => {
 router.get('/search/:userName', async (req, res) => {
     var userName = req.params.userName
     var result = await storiesDao.searchProfile(userName, req.headers)
-    console.log(result)
     res.status(result.code).send(result)
 })
 
 router.get('/profile/:userName', async (req, res) => {
     var userName = req.params.userName
-    var result = await storiesDao.getProfile(userName)
-    res.send(result)
+    var result = await storiesDao.getProfile(userName, req.headers)
+    res.status(result.code).send(result)
 })
 
 router.get('/stories/:userid', async (req, res) => {
