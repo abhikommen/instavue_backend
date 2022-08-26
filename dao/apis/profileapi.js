@@ -7,6 +7,7 @@ import ResultResponse from '../model/resultresponse.js'
 export async function GetProfile(userName, headers) {
 
   try {
+
     if (headers.cookie === undefined || headers.appid === undefined) {
       throw new ErrorModel(440, "Cookie or appid not present in the header request")
     }
@@ -52,9 +53,9 @@ export async function GetProfile(userName, headers) {
       )
       return new ResultResponse(code, profileEntity)
     } else {
-      return new ErrorModel(440, "Session Expire!!")
+      return new ErrorModel(404, "Session Expire!!")
     }
-  } catch (error) {
+  } catch (error) { 
     return error
   }
 
