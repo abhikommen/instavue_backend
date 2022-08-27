@@ -9,6 +9,7 @@ import {GetStories} from './apis/storiesapi.js'
 import {GetProfile} from './apis/profileapi.js'
 import {SearchProfile} from './apis/searchapi.js'
 import {GetReels}  from './apis/reelsapi.js'
+import fetch from 'node-fetch';
 
 
 
