@@ -3,10 +3,11 @@ import { CheckSession } from '../../util/util.js'
 import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
+import fetch from 'node-fetch';
+
 
 export async function TrayApi(headers) {
   try {
-
     if (headers.cookie === undefined || headers.appid === undefined) {
       throw new ErrorModel(440, "Cookie or appid not present in the header request")
     }
@@ -14,15 +15,23 @@ export async function TrayApi(headers) {
     var result = await fetch("https://i.instagram.com/api/v1/feed/reels_tray/", {
       "headers": {
         "accept": "*/*",
-        "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+        "accept-language": "en-GB,en;q=0.9",
+        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
         "x-ig-app-id": headers.appid,
         "cookie": headers.cookie,
+        "Referer": "https://www.instagram.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
       },
       "body": null,
       "method": "GET"
     });
-
-    var code = result.status
+    let code = result.status
+    console.log(code)
     if (code === 200) {
 
       var rawJson = await CheckSession(result)

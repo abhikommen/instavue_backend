@@ -29,6 +29,7 @@ router.get('/stories/:userid', async (req, res) => {
 })
 
 router.get('/tray', async (req, res) => {
+    console.log("Called")
     var result = await storiesDao.getTray(req.headers)
     res.status(result.code).send(result)
 })
