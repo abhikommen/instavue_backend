@@ -26,7 +26,6 @@ export async function SearchProfile(userName, headers) {
             "credentials": "include"
         });
 
-
         var code = result.status
         if (code === 200) {
             var jsonResult = await CheckSession(result)

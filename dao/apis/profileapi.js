@@ -53,12 +53,12 @@ export async function GetProfile(userName, headers) {
         user.edge_follow.count,
         user.biography
       )
+
       return new ResultResponse(code, profileEntity)
     } else {
       return new ErrorModel(440, "Session Expire!!")
     }
   } catch (error) {
-    console.log(error)
     return error
   }
 
