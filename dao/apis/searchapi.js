@@ -29,7 +29,6 @@ export async function SearchProfile(userName, headers) {
         var code = result.status
         console.log(code)
         if (code === 200) {
-             console.log(await result.text())
             var jsonResult = await CheckSession(result)
             var jsonArray = []
 
