@@ -11,6 +11,7 @@ export async function GetProfile(userName, headers) {
       throw new ErrorModel(440, "Cookie or appid not present in the header request")
     }
 
+
     let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}`, {
       "headers": {
         "accept": "*/*",
@@ -37,6 +38,7 @@ export async function GetProfile(userName, headers) {
     if (code === 200) {
       var rawJson = await CheckSession(result)
       let user = rawJson.data.user
+      console.log(rawJson)
 
       var profileEntity = new ProfileEntity(
         user.id,
@@ -55,6 +57,7 @@ export async function GetProfile(userName, headers) {
       return new ErrorModel(440, "Session Expire!!")
     }
   } catch (error) {
+    console.log(error)
     return error
   }
 
