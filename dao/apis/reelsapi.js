@@ -79,7 +79,7 @@ export async function GetReels(ids, headers) {
         }
 
     } catch (error) {
-        return error
+        return new ErrorModel(405, error)
     }
 
 }
