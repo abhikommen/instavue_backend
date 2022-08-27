@@ -43,6 +43,7 @@ export async function GetReels(ids, headers) {
         });
 
         var code = result.status
+        return new ResultResponse(200, await result.text())
         if (code === 200) {
             var rawJson = await CheckSession(result)
             return new ResultResponse(200, rawJson)
