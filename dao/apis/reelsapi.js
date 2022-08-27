@@ -45,6 +45,7 @@ export async function GetReels(ids, headers) {
         var code = result.status
         if (code === 200) {
             var rawJson = await CheckSession(result)
+            return new ResultResponse(200, rawJson)
             let jsonArray = []
             rawJson.reels_media.forEach((tray) => {
                 tray.items.forEach((item) => {
