@@ -6,7 +6,7 @@ import ResultResponse from '../model/resultresponse.js'
 
 export async function GetReels(ids, headers) {
     try {
-    
+        console.log("First")
         if (ids === undefined) {
             console.log(ids)
             return new ResultResponse(200, [])
@@ -14,6 +14,7 @@ export async function GetReels(ids, headers) {
         if (headers.cookie === undefined || headers.appid === undefined) {
             throw new ErrorModel(440, "Cookie or appid not present in the header request")
         }
+        console.log("Second")
 
         let reelsId = ''
         if (Array.isArray(ids)) {
@@ -23,6 +24,8 @@ export async function GetReels(ids, headers) {
         } else {
             reelsId = "reel_ids=" + ids
         }
+
+        console.log("Third")
         var result = await fetch(`https://i.instagram.com/api/v1/feed/reels_media/?${reelsId}`, {
             "headers": {
                 "accept": "*/*",
@@ -41,7 +44,7 @@ export async function GetReels(ids, headers) {
             "body": null,
             "method": "GET"
         });
-
+        console.log("Fourth")
         var code = result.status
         return new ResultResponse(200, await result.text())
         if (code === 200) {
@@ -81,6 +84,7 @@ export async function GetReels(ids, headers) {
         }
 
     } catch (error) {
+        console.log("error", error)
         return new ErrorModel(405, error)
     }
 
