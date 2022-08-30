@@ -1,6 +1,6 @@
 
 
-var ProfileEntity = function (id, username, full_name, is_private, pfp, is_verified, followers, following, bio) {
+var ProfileEntity = function (id, username, full_name, is_private, pfp, is_verified, followers, following, bio, query_hash) {
     this.id = id;
     this.username = username;
     this.full_name = full_name;
@@ -10,6 +10,7 @@ var ProfileEntity = function (id, username, full_name, is_private, pfp, is_verif
     this.followers = followers;
     this.following = following
     this.bio = bio
+    this.query_hash = query_hash
 }
 
 export default ProfileEntity

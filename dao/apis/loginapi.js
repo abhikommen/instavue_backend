@@ -46,13 +46,21 @@ export async function LoginApi(headers) {
 
                 let encodedPfp = String(html.match(/profile_pic_url_hd.....(.*?)\\"/)[1])
                 let pfp = encodedPfp.replaceAll('\\/', "/").replaceAll("\\\\u0026", '&').toString()
+                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[1]
+
+                let url = nonceApi.match(/href="([^"]*)/)[1];
+
+                let nonceResult = await fetch(url)
+                let nonceResponse = await nonceResult.text()
+                let queryHash = nonceResponse.match(/;var.h="(.*?)",i=d/)[1]
 
                 let profileEntity = {
                     id: id,
-                    username : userName,
-                    full_name : fullName,
-                    bio : bio,
-                    pfp : pfp
+                    username: userName,
+                    full_name: fullName,
+                    bio: bio,
+                    pfp: pfp,
+                    query_hash: queryHash
                 }
 
                 return new ResultResponse(code, profileEntity)

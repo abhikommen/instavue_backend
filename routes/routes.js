@@ -28,6 +28,13 @@ router.get('/stories/:userid', async (req, res) => {
     res.status(result.code).send(result)
 })
 
+router.get('/highlights/:userid', async (req, res) => {
+    var userId = req.params.userid
+    var result = await storiesDao.getHighlight(userId, req.headers)
+    res.status(result.code).send(result)
+})
+
+
 router.get('/tray', async (req, res) => {
     console.log("Called")
     var result = await storiesDao.getTray(req.headers)
