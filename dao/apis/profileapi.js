@@ -5,6 +5,7 @@ import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
 
 
+
 export async function GetProfile(userName, headers) {
   try {
 
@@ -12,21 +13,20 @@ export async function GetProfile(userName, headers) {
       throw new ErrorModel(440, "Cookie or appid not present in the header request")
     }
 
-
     let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}`, {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-        "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"103\", \"Chromium\";v=\"103\"",
+        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"macOS\"",
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site",
         "x-asbd-id": "198387",
-        "x-csrftoken": "Zet6vVN6xoJp5AqiPL2qG0CRJoCau2dQ",
+        "x-csrftoken": "2bueufHWpyYW5sknhDEhe5G9XY11VhGF",
         "x-ig-app-id": headers.appid,
-        "x-ig-www-claim": "hmac.AR24wR_VUVv1fn1tC5fefxoL9BMfXltnklJmoDSI2ZqEOli9",
+        "x-ig-www-claim": "hmac.AR3DpFguNkFuJaIoi4y5Wc6O5vrROTJvD6URl60moWtZecMF",
         "cookie": headers.cookie,
         "Referer": "https://www.instagram.com/",
         "Referrer-Policy": "strict-origin-when-cross-origin"
@@ -35,11 +35,14 @@ export async function GetProfile(userName, headers) {
       "method": "GET"
     });
 
-    var code = result.status
+
+
     if (code === 200) {
       var rawJson = await CheckSession(result)
       let user = rawJson.data.user
       console.log(rawJson)
+
+      return new ResultResponse(code, json)
 
       var profileEntity = new ProfileEntity(
         user.id,
@@ -48,17 +51,20 @@ export async function GetProfile(userName, headers) {
         user.is_private,
         user.profile_pic_url_hd,
         user.is_verified,
-        0,
         user.edge_followed_by.count,
         user.edge_follow.count,
         user.biography
       )
 
-      return new ResultResponse(code, profileEntity)
+      let json = {}
+      json.profile = profileEntity
+
+      return new ResultResponse(code, json)
     } else {
       return new ErrorModel(440, "Session Expire!!")
     }
   } catch (error) {
+    console.log(error)
     return error
   }
 

@@ -9,7 +9,7 @@ import {GetStories} from './apis/storiesapi.js'
 import {GetProfile} from './apis/profileapi.js'
 import {SearchProfile} from './apis/searchapi.js'
 import {GetReels}  from './apis/reelsapi.js'
-
+import {LoginApi}  from './apis/loginapi.js'
 
 
 const storiesDao = {
@@ -17,7 +17,8 @@ const storiesDao = {
   getProfile: GetProfile,
   getStories: GetStories,
   getTray: TrayApi,
-  getReels: GetReels
+  getReels: GetReels,
+  login : LoginApi,
 }
 
 

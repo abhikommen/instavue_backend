@@ -39,6 +39,12 @@ router.get('/reels', async (req, res) => {
     res.status(result.code).send(result)
 })
 
+
+router.get('/login', async (req, res) => {
+    var result = await storiesDao.login(req.headers)
+    res.status(result.code).send(result)
+})
+
 router.get('/privacy', (req, res) => {
     res.sendFile(path.resolve('./assets/privacy.html'))
 })
