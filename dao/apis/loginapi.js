@@ -41,9 +41,9 @@ export async function LoginApi(headers) {
                 let html = await result.text()
                 
                 let userName = html.match(/username.....(.*?)\\"/)[1]
-                let fullName = html.match(/full_name.....(.*?)\\/)[1]
+                let fullName = html.match(/full_name.....(.*?)\\"/)[1]
                 let id = html.match(/"id\\":\\"(.*?)\\/)[1]
-                let bio = html.match(/"biography\\":\\"(.*?)\\/)[1]
+                let bio = html.match(/"biography\\":\\"(.*?)\\"/)[1]
 
                
 
