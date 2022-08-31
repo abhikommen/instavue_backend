@@ -36,13 +36,12 @@ export async function GetProfile(userName, headers) {
     });
 
 
-
+    let code = result.status
     if (code === 200) {
       var rawJson = await CheckSession(result)
       let user = rawJson.data.user
       console.log(rawJson)
 
-      return new ResultResponse(code, json)
 
       var profileEntity = new ProfileEntity(
         user.id,
@@ -56,10 +55,7 @@ export async function GetProfile(userName, headers) {
         user.biography
       )
 
-      let json = {}
-      json.profile = profileEntity
-
-      return new ResultResponse(code, json)
+      return new ResultResponse(code, profileEntity)
     } else {
       return new ErrorModel(440, "Session Expire!!")
     }

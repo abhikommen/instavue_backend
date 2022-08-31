@@ -3,6 +3,7 @@ import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
+import {GetProfile} from './profileapi.js'
 
 export async function LoginApi(headers) {
 
@@ -34,40 +35,23 @@ export async function LoginApi(headers) {
 
 
         var code = result.status
-        console.log(code)
         if (code === 200) {
 
             try {
                 let html = await result.text()
                 
                 let userName = html.match(/username.....(.*?)\\"/)[1]
-                let fullName = html.match(/full_name.....(.*?)\\"/)[1]
-                let id = html.match(/"id\\":\\"(.*?)\\/)[1]
-                let bio = html.match(/"biography\\":\\"(.*?)\\"/)[1]
-
-               
-
-                let encodedPfp = String(html.match(/profile_pic_url_hd.....(.*?)\\"/)[1])
-                let pfp = encodedPfp.replaceAll('\\/', "/").replaceAll("\\\\u0026", '&').toString()
+                
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[2]
-
                 let url = nonceApi.match(/href="([^"]*)/)[1];            
 
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
-
                 let queryHash = nonceResponse.match(/;var.h="(.*?)",i=d/)[1]
 
-                let profileEntity = {
-                    id: id,
-                    username: userName,
-                    full_name: fullName,
-                    bio: bio,
-                    pfp: pfp,
-                    query_hash: queryHash
-                }
-
-                return new ResultResponse(code, profileEntity)
+                let profile = await GetProfile(userName, headers)
+                profile.result.query_hash = queryHash
+                return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Something went wrong parsing login response" + e)
             }
