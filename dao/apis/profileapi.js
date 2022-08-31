@@ -24,9 +24,7 @@ export async function GetProfile(userName, headers) {
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site",
         "x-asbd-id": "198387",
-        "x-csrftoken": "2bueufHWpyYW5sknhDEhe5G9XY11VhGF",
         "x-ig-app-id": headers.appid,
-        "x-ig-www-claim": "hmac.AR3DpFguNkFuJaIoi4y5Wc6O5vrROTJvD6URl60moWtZecMF",
         "cookie": headers.cookie,
         "Referer": "https://www.instagram.com/",
         "Referrer-Policy": "strict-origin-when-cross-origin"
@@ -37,6 +35,7 @@ export async function GetProfile(userName, headers) {
 
 
     let code = result.status
+    return new ResultResponse(code, await result.text())
     if (code === 200) {
       var rawJson = await CheckSession(result)
       let user = rawJson.data.user
