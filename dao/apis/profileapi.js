@@ -35,7 +35,7 @@ export async function GetProfile(userName, headers) {
 
 
 
-    let result = await fetch("https://i.instagram.com/api/v1/users/web_profile_info/?username=amazon", {
+    let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}`, {
   "headers": {
     "accept": "*/*",
     "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
