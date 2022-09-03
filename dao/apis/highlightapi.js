@@ -16,6 +16,7 @@ export async function GetHighlight(userId, headers) {
   
       let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${headers.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`)
       let code = result.status
+      return new ResultResponse(code, await result.text())
       if (code === 200) {
         var rawJson = await CheckSession(result)
         const highlightsArray = []
