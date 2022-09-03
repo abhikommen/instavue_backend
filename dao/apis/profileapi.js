@@ -13,7 +13,7 @@ export async function GetProfile(userName, headers) {
       throw new ErrorModel(401, "Cookie or appid not present in the header request")
     }
 
-    let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}`, {
+    let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}&hl=en`, {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
@@ -51,13 +51,13 @@ export async function GetProfile(userName, headers) {
           )
           return new ResultResponse(code, profileEntity)
         } else {
-          return new ResultResponse(code, {})
+          return new ErrorModel(404, "User not found")
         }
       } catch (e) {
         return new ErrorModel(500, "Something went wrong. Error : " + e)
       }
     } else {
-      return new ErrorModel(440, "Session Expire!!")
+      return new ErrorModel(404, "User not found")
     }
   } catch (error) {
     return error
