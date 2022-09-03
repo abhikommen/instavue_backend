@@ -14,14 +14,12 @@ export async function GetHighlight(userId, headers) {
     if (headers.query_hash === undefined) {
       throw new ErrorModel(401, "Query Hash is missing in the header request")
     }
-
-    var loginApiResult = await LoginApi(headers)
-    console.log(loginApiResult)
-    let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${loginApiResult.result.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`, {
+  
+    let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${headers.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`, {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
+        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brnoand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"macOS\"",
         "sec-fetch-dest": "empty",
@@ -36,7 +34,6 @@ export async function GetHighlight(userId, headers) {
       "method": "GET"
     })
     let code = result.status
-    return new ResultResponse(code, await result.text())
     if (code === 200) {
       var rawJson = await CheckSession(result)
       const highlightsArray = []
