@@ -3,7 +3,7 @@ import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
-import {GetProfile} from './profileapi.js'
+import { GetProfile } from './profileapi.js'
 
 export async function LoginApi(headers) {
 
@@ -12,7 +12,6 @@ export async function LoginApi(headers) {
         if (headers.cookie === undefined || headers.appid === undefined) {
             throw new ErrorModel(401, "Cookie or appid not present in the header request")
         }
-
 
         let result = await fetch(`https://www.instagram.com/`, {
             "headers": {
@@ -36,30 +35,27 @@ export async function LoginApi(headers) {
 
         var code = result.status
         if (code === 200) {
-
             try {
                 let html = await result.text()
-                
                 let userName = html.match(/username.....(.*?)\\"/)[1]
-                
-                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[2]
-                let url = nonceApi.match(/href="([^"]*)/)[1];            
+
+                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[1]
+                let url = nonceApi.match(/href="([^"]*)/)[1];
 
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
                 let queryHash = nonceResponse.match(/;var.h="(.*?)",i=d/)[1]
-
+                console.log(queryHash)
                 let profile = await GetProfile(userName, headers)
                 profile.result.query_hash = queryHash
                 return new ResultResponse(code, profile.result)
             } catch (e) {
-                throw new ErrorModel(440, "Something went wrong parsing login response" + e)
+                throw new ErrorModel(440, "Login Failed : " + e)
             }
         } else {
             return new ErrorModel(440, "Session Expire!!")
         }
     } catch (error) {
-        console.log(error)
         return error
     }
 

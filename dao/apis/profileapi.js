@@ -47,7 +47,9 @@ export async function GetProfile(userName, headers) {
             user.is_verified,
             user.edge_followed_by.count,
             user.edge_follow.count,
-            user.biography
+            user.biography,
+            '',
+            user.followed_by_viewer
           )
           return new ResultResponse(code, profileEntity)
         } else {
