@@ -11,7 +11,7 @@ export async function GetHighlight(userId, headers) {
     try {
   
       if (headers.query_hash === undefined) {
-        throw new ErrorModel(440, "Query Hash is missing in the header request")
+        throw new ErrorModel(401, "Query Hash is missing in the header request")
       }
   
       let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${headers.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`)

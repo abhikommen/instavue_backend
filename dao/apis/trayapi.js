@@ -9,7 +9,7 @@ import fetch from 'node-fetch';
 export async function TrayApi(headers) {
   try {
     if (headers.cookie === undefined || headers.appid === undefined) {
-      throw new ErrorModel(440, "Cookie or appid not present in the header request")
+      throw new ErrorModel(401, "Cookie or appid not present in the header request")
     }
 
     var result = await fetch("https://i.instagram.com/api/v1/feed/reels_tray/", {
