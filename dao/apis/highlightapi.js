@@ -17,7 +17,24 @@ export async function GetHighlight(userId, headers) {
 
     var loginApiResult = await LoginApi(headers)
     console.log(loginApiResult)
-    let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${loginApiResult.result.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`)
+    let result = await fetch(`https://www.instagram.com/graphql/query/?query_hash=${loginApiResult.result.query_hash}&variables={"user_id":${userId},"include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":true,"include_live_status":true}`, {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+        "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "x-ig-app-id": headers.appid,
+        "cookie": headers.cookie,
+        "Referer": "https://www.instagram.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "body": null,
+      "method": "GET"
+    })
     let code = result.status
     return new ResultResponse(code, await result.text())
     if (code === 200) {
