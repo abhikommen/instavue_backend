@@ -35,6 +35,15 @@ router.get('/highlights/:userid', async (req, res) => {
 })
 
 
+
+router.get('/timeline/:userid/:username', async (req, res) => {
+    var userId = req.params.userid
+    var userName = req.params.username
+    var result = await storiesDao.getTimeline(userId, userName, req.headers)
+    res.status(result.code).send(result)
+})
+
+
 router.get('/tray', async (req, res) => {
     console.log("Called")
     var result = await storiesDao.getTray(req.headers)

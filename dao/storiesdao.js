@@ -11,6 +11,7 @@ import {SearchProfile} from './apis/searchapi.js'
 import {GetReels}  from './apis/reelsapi.js'
 import {LoginApi}  from './apis/loginapi.js'
 import {GetHighlight} from './apis/highlightapi.js'
+import { GetTimeline } from './apis/timelineapi.js';
 
 
 const storiesDao = {
@@ -20,7 +21,8 @@ const storiesDao = {
   getTray: TrayApi,
   getReels: GetReels,
   login : LoginApi,
-  getHighlight : GetHighlight
+  getHighlight : GetHighlight,
+  getTimeline : GetTimeline
 }
 
 
