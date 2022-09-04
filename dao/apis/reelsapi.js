@@ -55,6 +55,7 @@ export async function GetReels(ids, headers) {
                     story.user_id = tray.user.pk
                     story.accessibility_caption = item.accessibility_caption
                     story.is_video = item.media_type === 2
+                    story.is_close_story = (item.audience !== null && item.audience === "besties")
 
                     story.user = new ProfileEntity(
                         tray.user.pk,
