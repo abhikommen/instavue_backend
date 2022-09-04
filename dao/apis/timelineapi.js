@@ -25,7 +25,7 @@ export async function GetTimeline(userId, userName, headers) {
         const story = await GetReels(userId, headers)
 
         resultJson.highlights = highlights.result
-        resultJson.profile = profile.result
+        resultJson.user = profile.result
         resultJson.story = story.result
 
         return new ResultResponse(200, resultJson)
