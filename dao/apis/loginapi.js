@@ -39,14 +39,17 @@ export async function LoginApi(headers) {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
 
-                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[1]
+                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[2]
                 let url = nonceApi.match(/href="([^"]*)/)[1];
+                
 
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
                 let queryHash = nonceResponse.match(/;var.h="(.*?)",i=d/)[1]
-                console.log(queryHash)
+
                 let profile = await GetProfile(userName, headers)
+
+
                 profile.result.query_hash = queryHash
                 return new ResultResponse(code, profile.result)
             } catch (e) {
@@ -58,5 +61,4 @@ export async function LoginApi(headers) {
     } catch (error) {
         return error
     }
-
 }
