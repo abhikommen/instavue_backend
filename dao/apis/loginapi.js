@@ -50,13 +50,13 @@ export async function LoginApi(headers) {
                 })
 
                 let url = dummyUrl.match(/href="([^"]*)/)[1];
-               
+                
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
-                let queryHash = nonceResponse.match(/;var.h="(.*?)",i=d/)[1]
+
+                let queryHash = nonceResponse.match(/;var.h="(.*?)",i=/)[1]
 
                 let profile = await GetProfile(userName, headers)
-
 
                 profile.result.query_hash = queryHash
                 return new ResultResponse(code, profile.result)
