@@ -39,20 +39,13 @@ export async function LoginApi(headers) {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
 
-                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
-                let maxLength = 0
-                let dummyUrl = ''
-                nonceApi.forEach((nonce) => {
-                    if(nonce.length > maxLength){
-                        dummyUrl = nonce
-                        maxLength = nonce.length
-                    }
-                })
-
-                let url = dummyUrl.match(/href="([^"]*)/)[1];
+                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[2]
+              
+                let url = nonceApi.match(/href="([^"]*)/)[1];
                 
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
+
 
                 let queryHash = nonceResponse.match(/;var.h="(.*?)",i=/)[1]
 

@@ -86,8 +86,7 @@ export async function TrayApi(headers) {
       })
       return new ResultResponse(code, jsonArray)
     } else {
-      var errorMessage = await result.text()
-      return new ErrorModel(code, errorMessage)
+      return new ErrorModel(440, "Session Expire!!")
     }
   } catch (e) {
     return e
