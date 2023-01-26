@@ -11,6 +11,6 @@ const app = express()
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', router)
 
-app.listen(process.env.PORT || 5555, () => {
+app.listen(3000, () => {
     console.log(`Running app listening`)
 })
