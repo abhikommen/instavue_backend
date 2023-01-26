@@ -12,5 +12,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', router)
 
 app.listen(3000, () => {
-    console.log(`Running app listening`)
+    console.log(`Running app listening `, 3000)
 })
