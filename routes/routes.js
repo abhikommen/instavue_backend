@@ -34,8 +34,6 @@ router.get('/highlights/:userid', async (req, res) => {
     res.status(result.code).send(result)
 })
 
-
-
 router.get('/timeline/:userid/:username', async (req, res) => {
     var userId = req.params.userid
     var userName = req.params.username

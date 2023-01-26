@@ -6,8 +6,6 @@ import fetch from 'node-fetch';
 import { GetProfile } from './profileapi.js'
 
 export async function LoginApi(headers) {
-
-
     try {
         if (headers.cookie === undefined || headers.appid === undefined) {
             throw new ErrorModel(401, "Cookie or appid not present in the header request")
@@ -31,27 +29,16 @@ export async function LoginApi(headers) {
             "body": null,
             "method": "GET"
         });
-
-
         var code = result.status
         if (code === 200) {
             try {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
 
-                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)[2]
-              
-                let url = nonceApi.match(/href="([^"]*)/)[1];
-                
-                let nonceResult = await fetch(url)
-                let nonceResponse = await nonceResult.text()
-
-
-                let queryHash = nonceResponse.match(/;var.h="(.*?)",i=/)[1]
-
+                let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 let profile = await GetProfile(userName, headers)
+                profile.result.query_hash = await findNonce(nonceApi)
 
-                profile.result.query_hash = queryHash
                 return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Login Failed : " + e)
@@ -62,4 +49,23 @@ export async function LoginApi(headers) {
     } catch (error) {
         return error
     }
+}
+
+const findNonce = async (regexLinkArray) => {
+    try {
+        for (let linkRegex of regexLinkArray) {
+            let url = linkRegex.match(/href="([^"]*)/)[1];
+            let nonceResult = await fetch(url)
+            let nonceResponse = await nonceResult.text()
+            try {
+                let queryHash = nonceResponse.match(/(?<=;var.h=")(.*)(?=",i=d)/g)[0]
+                return queryHash
+            } catch {
+                console.log("Couldn't find url... ")
+            }
+        }
+    } catch(error){
+        return "na"
+    }
+    return "na"
 }
