@@ -14,7 +14,7 @@ import fetch from 'node-fetch';
 export async function GetTimeline(userId, userName, headers) {
 
     try {
-
+        console.log(headers)
         if (headers.cookie === undefined || headers.appid === undefined) {
             throw new ErrorModel(401, "Cookie or appid not present in the header request")
         }

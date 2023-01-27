@@ -10,7 +10,7 @@ import fetch from 'node-fetch';
 
 export async function GetHighlight(userId, headers) {
   try {
-
+    console.log(headers)
     if (headers.query_hash === undefined) {
       throw new ErrorModel(401, "Query Hash is missing in the header request")
     }
