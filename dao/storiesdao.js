@@ -12,6 +12,7 @@ import {GetReels}  from './apis/reelsapi.js'
 import {LoginApi}  from './apis/loginapi.js'
 import {GetHighlight} from './apis/highlightapi.js'
 import { GetTimeline } from './apis/timelineapi.js';
+import {SSOApi} from "./apis/sso.js"
 
 
 const storiesDao = {
@@ -22,9 +23,8 @@ const storiesDao = {
   getReels: GetReels,
   login : LoginApi,
   getHighlight : GetHighlight,
-  getTimeline : GetTimeline
+  getTimeline : GetTimeline,
+  sso : SSOApi
 }
-
-
 
 export default storiesDao

@@ -60,6 +60,12 @@ router.get('/login', async (req, res) => {
     res.status(result.code).send(result)
 })
 
+router.get('/sso', async (req, res) => {
+    var result = await storiesDao.sso(req.headers)
+    res.status(result.code).send(result)
+})
+
+
 router.get('/privacy', (req, res) => {
     res.sendFile(path.resolve('./assets/privacy.html'))
 })

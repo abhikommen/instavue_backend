@@ -1,5 +1,3 @@
-import { CheckSession } from '../../util/util.js'
-import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
@@ -7,28 +5,16 @@ import { GetProfile } from './profileapi.js'
 
 export async function LoginApi(headers) {
     try {
-        if (headers.cookie === undefined || headers.appid === undefined) {
-            throw new ErrorModel(401, "Cookie or appid not present in the header request")
-        }
 
+        if (headers.cookie === undefined ) {
+            throw new ErrorModel(401, "Headers not preset.")
+        }
         let result = await fetch(`https://www.instagram.com/`, {
-            "headers": {
-                "accept": "*/*",
-                "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
-                "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"104\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"macOS\"",
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-site",
-                "x-ig-app-id": headers.appid,
-                "cookie": headers.cookie,
-                "Referer": "https://www.instagram.com/",
-                "Referrer-Policy": "strict-origin-when-cross-origin"
-            },
+            "headers": headers,
             "body": null,
             "method": "GET"
         });
+        
         var code = result.status
         if (code === 200) {
             try {
@@ -38,7 +24,7 @@ export async function LoginApi(headers) {
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 let profile = await GetProfile(userName, headers)
                 profile.result.query_hash = await findNonce(nonceApi)
-
+                console.log(userName)
                 return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Login Failed : " + e)
@@ -47,6 +33,7 @@ export async function LoginApi(headers) {
             return new ErrorModel(440, "Session Expire!!")
         }
     } catch (error) {
+        console.log(error)
         return error
     }
 }
