@@ -7,6 +7,7 @@ import fetch from 'node-fetch';
 
 export async function GetReels(ids, headers) {
     try {
+        delete headers.host;
         if (ids === undefined) {
             console.log(ids)
             return new ResultResponse(200, [])

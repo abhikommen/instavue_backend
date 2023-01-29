@@ -10,7 +10,7 @@ export async function GetStories(userId, headers) {
     let searchedUserId = userId
 
     try {
-
+        delete headers.host;
         if (headers.cookie === undefined) {
             throw new ErrorModel(401, "Cookie not present in the header request")
         }

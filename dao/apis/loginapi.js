@@ -5,7 +5,8 @@ import { GetProfile } from './profileapi.js'
 
 export async function LoginApi(headers) {
     try {
-
+        delete headers.host;
+        console.log(headers)
         if (headers.cookie === undefined ) {
             throw new ErrorModel(401, "Headers not preset.")
         }
@@ -14,22 +15,25 @@ export async function LoginApi(headers) {
             "body": null,
             "method": "GET"
         });
-        
+    
         var code = result.status
+        console.log(code)
+
         if (code === 200) {
             try {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
+                console.log(userName)
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 let profile = await GetProfile(userName, headers)
-                profile.result.query_hash = await findNonce(nonceApi)
-                console.log(userName)
+               // profile.result.query_hash = await findNonce(nonceApi)
                 return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Login Failed : " + e)
             }
         } else {
+            console.log(await result.text())
             return new ErrorModel(440, "Session Expire!!")
         }
     } catch (error) {

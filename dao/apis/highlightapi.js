@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 
 export async function GetHighlight(userId, headers) {
   try {
-    
+    delete headers.host;
     if (headers.cookie === undefined || headers.queryhash === undefined) {
       throw new ErrorModel(401, "cookie or queryhash is missing or expired")
     }

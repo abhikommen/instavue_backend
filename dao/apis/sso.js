@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 
 export async function SSOApi(headers) {
     try {
+        delete headers.host;
         if (headers.cookie === undefined) {
             throw new ErrorModel(401, "Coo not preset.")
         }

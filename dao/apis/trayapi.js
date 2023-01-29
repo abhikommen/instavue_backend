@@ -8,6 +8,7 @@ import fetch from 'node-fetch';
 
 export async function TrayApi(headers) {
   try {
+    delete headers.host;
 
     if (headers.cookie === undefined) {
       throw new ErrorModel(401, "Cookie not present in the header request")
