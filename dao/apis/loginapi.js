@@ -6,6 +6,9 @@ import { GetProfile } from './profileapi.js'
 export async function LoginApi(headers) {
     try {
         delete headers.host;
+        delete headers["user-agent"];
+    
+
         console.log(headers)
         if (headers.cookie === undefined ) {
             throw new ErrorModel(401, "Headers not preset.")
@@ -27,7 +30,8 @@ export async function LoginApi(headers) {
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 let profile = await GetProfile(userName, headers)
-               // profile.result.query_hash = await findNonce(nonceApi)
+                console.log(nonceApi)
+                profile.result.query_hash = await findNonce(nonceApi)
                 return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Login Failed : " + e)
@@ -45,18 +49,22 @@ export async function LoginApi(headers) {
 const findNonce = async (regexLinkArray) => {
     try {
         for (let linkRegex of regexLinkArray) {
-            let url = linkRegex.match(/href="([^"]*)/)[1];
-            let nonceResult = await fetch(url)
-            let nonceResponse = await nonceResult.text()
-            try {
-                let queryHash = nonceResponse.match(/(?<=;var.h=")(.*)(?=",i=d)/g)[0]
-                return queryHash
-            } catch {
-                console.log("Couldn't find url... ")
+            try{
+                let url = linkRegex.match(/href="([^"]*)/)[1];
+                let nonceResult = await fetch(url)
+                let nonceResponse = await nonceResult.text()
+                try {
+                    let queryHash = nonceResponse.match(/(?<=;var.h=")(.*)(?=",i=d)/g)[0]
+                    return queryHash
+                } catch {
+                    console.log("Couldn't find url... ")
+                }
+            } catch (e){
+
             }
         }
     } catch(error){
-        return "na"
+        //return "na"
     }
     return "na"
 }
