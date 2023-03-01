@@ -10,7 +10,8 @@ export async function TrayApi(headers) {
   try {
     delete headers.host;
 
-    if (headers.cookie === undefined) {
+    console.log("Tray Api:", headers)
+    if (headers.cookie === xundefined) {
       throw new ErrorModel(401, "Cookie not present in the header request")
     }
 

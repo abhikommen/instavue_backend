@@ -3,6 +3,7 @@ import ResultResponse from '../model/resultresponse.js'
 import { GetHighlight } from './highlightapi.js'
 import { GetProfile } from './profileapi.js'
 import { GetReels } from "./reelsapi.js"
+import testingHeader from '../model/testingheader.js'
 
 
 export async function GetTimeline(userId, userName, headers) {
@@ -11,7 +12,8 @@ export async function GetTimeline(userId, userName, headers) {
         delete headers.host;
 
         if (headers.cookie === undefined) {
-            throw new ErrorModel(401, "Cookie not present in the header request")
+            headers = testingHeader
+           // throw new ErrorModel(401, "Cookie not present in the header request")
         }
 
         let resultJson = {}

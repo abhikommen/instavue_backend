@@ -2,17 +2,18 @@ import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
 import { GetProfile } from './profileapi.js'
+import fs from 'fs'
 
 export async function LoginApi(headers) {
     try {
         delete headers.host;
         delete headers["user-agent"];
     
-
         console.log(headers)
         if (headers.cookie === undefined ) {
             throw new ErrorModel(401, "Headers not preset.")
         }
+
         let result = await fetch(`https://www.instagram.com/`, {
             "headers": headers,
             "body": null,

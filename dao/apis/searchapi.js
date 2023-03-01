@@ -3,14 +3,17 @@ import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
+import testingHeader from '../model/testingheader.js'
 
 export async function SearchProfile(userName, headers) {
 
     try {
         delete headers.host;
         if (headers.cookie === undefined) {
-            throw new ErrorModel(401, "Cookie not present in the header request")
+            headers = testingHeader
+            // throw new ErrorModel(401, "Cookie not present in the header request")
         }
+
         let result = await fetch(`https://i.instagram.com/api/v1/web/search/topsearch/?context=blended&query=${userName}`, {
             "headers": headers,
             "body": null,
@@ -18,7 +21,7 @@ export async function SearchProfile(userName, headers) {
         });
 
         var code = result.status
-        console.log(code)
+        //console.log(code)
         if (code === 200) {
             var jsonResult = await CheckSession(result)
             var jsonArray = []

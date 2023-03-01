@@ -2,7 +2,7 @@
   "name": "instavue",
   "version": "1.0.0",
   "description": "",
-  "type": "module" ,
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "instapro": "^4.0.1",
     "node-fetch": "^3.2.9"
   }
 }

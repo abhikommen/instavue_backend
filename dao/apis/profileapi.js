@@ -3,14 +3,16 @@ import ProfileEntity from '../model/profilemodel.js'
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
-
+import testingHeader from '../model/testingheader.js'
 
 
 export async function GetProfile(userName, headers) {
   try {
     delete headers.host;
+
     if (headers.cookie === undefined) {
-      throw new ErrorModel(401, "Cookie not present in the header request")
+      headers = testingHeader
+      // throw new ErrorModel(401, "Cookie not present in the header request")
     }
 
     let result = await fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${userName}&hl=en`, {
