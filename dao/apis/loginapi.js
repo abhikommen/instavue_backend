@@ -31,8 +31,8 @@ export async function LoginApi(headers) {
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 let profile = await GetProfile(userName, headers)
-                console.log(nonceApi)
                 profile.result.query_hash = await findNonce(nonceApi)
+                console.log(profile.result)
                 return new ResultResponse(code, profile.result)
             } catch (e) {
                 throw new ErrorModel(440, "Login Failed : " + e)
