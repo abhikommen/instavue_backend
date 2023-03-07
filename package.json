@@ -12,7 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "http-proxy-agent": "^5.0.0",
+    "https-proxy-agent": "^5.0.1",
     "instapro": "^4.0.1",
-    "node-fetch": "^3.2.9"
+    "node-fetch": "^3.2.9",
+    "save": "^2.9.0"
   }
 }

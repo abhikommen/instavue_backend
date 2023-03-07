@@ -1,33 +1,32 @@
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
-import { GetHighlight } from './highlightapi.js'
+import { GetHighlightList } from './highlightapi.js'
 import { GetProfile } from './profileapi.js'
 import { GetReels } from "./reelsapi.js"
-import testingHeader from '../model/testingheader.js'
+import { GetStories } from './storiesapi.js'
 
+
+const TAG = "TimeLineApiTag"
 
 export async function GetTimeline(userId, userName, headers) {
 
     try {
         delete headers.host;
-
-        if (headers.cookie === undefined) {
-            headers = testingHeader
-           // throw new ErrorModel(401, "Cookie not present in the header request")
-        }
-
+        console.log(TAG + " for:", userId, userName)
+        
         let resultJson = {}
-        const highlights = await GetHighlight(userId, headers)
-        const profile = await GetProfile(userName, headers)
-        const story = await GetReels(userId, headers)
+        const highlightList = await GetHighlightList(userId, headers)
+        const userInfo = await GetProfile(userId, userName, headers)
+        const storiesList = await GetStories(userId, userName, headers)
 
-        resultJson.highlights = highlights.result
-        resultJson.user = profile.result
-        resultJson.story = story.result
+        resultJson.highlights = highlightList.result
+        resultJson.user = userInfo.result
+        resultJson.story = storiesList.result
 
         return new ResultResponse(200, resultJson)
 
     } catch (error) {
+        console.log(TAG, "Error", error)
         return error
     }
 

@@ -27,10 +27,11 @@ export async function LoginApi(headers) {
             try {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
+                let userid = html.match(/viewerId.....(.*?)\\"/)[1]
                 console.log(userName)
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
-                let profile = await GetProfile(userName, headers)
+                let profile = await GetProfile(userid, userName, headers)
                 profile.result.query_hash = await findNonce(nonceApi)
                 console.log(profile.result)
                 return new ResultResponse(code, profile.result)
