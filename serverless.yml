@@ -1,0 +1,20 @@
+
+service: InstaVueApp
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  memorySize : 2048
+  timeout: 20
+  region: us-east-2
+
+functions:
+  api:
+    handler: handler.api
+    events:
+      - http : ANY /{proxy+}
+      - http : ANY /
+
+  
+
