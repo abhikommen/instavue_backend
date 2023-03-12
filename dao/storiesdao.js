@@ -5,12 +5,12 @@ import ErrorModel from './model/error.js'
 import ResultResponse from './model/resultresponse.js'
 import isJsonString from '../util/util.js'
 import {TrayApi} from './apis/trayapi.js'
-import {GetStories} from './apis/storiesapi.js'
-import {GetProfile} from './apis/profileapi.js'
+import {GetStories} from './apis/story/storiesapi.js'
+import {GetProfile} from './apis/profile/profileapi.js'
 import {SearchProfile} from './apis/searchapi.js'
 import {GetReels}  from './apis/reelsapi.js'
 import {LoginApi}  from './apis/loginapi.js'
-import {GetHighlightList} from './apis/highlightapi.js'
+import {GetHighlightList} from './apis/highlightlist/highlightapi.js'
 import { GetTimeline } from './apis/timelineapi.js';
 import {SSOApi} from "./apis/sso.js"
 

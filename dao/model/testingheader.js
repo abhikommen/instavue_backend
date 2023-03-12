@@ -12,5 +12,4 @@ const testingHeader = {
   "Referrer-Policy": "strict-origin-when-cross-origin"
 }
 
-
 export default testingHeader

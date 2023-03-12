@@ -16,18 +16,9 @@ router.get('/search/:userName', async (req, res) => {
     res.status(result.code).send(result)
 })
 
-router.get('/profile/:userId/:userName', async (req, res) => {
-    var userName = req.params.userName
+router.get('/profile/:userId/', async (req, res) => {
     var userId = req.params.userId
-    var result = await storiesDao.getProfile(userId, userName, req.headers )
-    res.status(result.code).send(result)
-})
-
-
-router.get('/stories/:userid/', async (req, res) => {
-    var userId = req.params.userid
-    var userName = req.params.username
-    var result = await storiesDao.getStories(userId, null, req.headers)
+    var result = await storiesDao.getProfile(userId, req.headers )
     res.status(result.code).send(result)
 })
 
@@ -35,9 +26,10 @@ router.get('/stories/:userid/', async (req, res) => {
 router.get('/stories/:userid/:username', async (req, res) => {
     var userId = req.params.userid
     var userName = req.params.username
-    var result = await storiesDao.getStories(userId,userName, req.headers)
+    var result = await storiesDao.getStories(userId, userName, req.headers)
     res.status(result.code).send(result)
 })
+
 
 router.get('/highlights/:userid', async (req, res) => {
     var userId = req.params.userid
@@ -48,7 +40,6 @@ router.get('/highlights/:userid', async (req, res) => {
 router.get('/timeline/:userid/:username', async (req, res) => {
     var userId = req.params.userid
     var userName = req.params.username
-    console.log(req.headers)
     var result = await storiesDao.getTimeline(userId, userName, req.headers)
     res.status(result.code).send(result)
 })

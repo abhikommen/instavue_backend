@@ -1,7 +1,7 @@
 import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
-import { GetProfile } from './profileapi.js'
+import { GetProfile } from './profile/profileapi.js'
 import fs from 'fs'
 
 export async function LoginApi(headers) {
@@ -28,9 +28,10 @@ export async function LoginApi(headers) {
                 let html = await result.text()
                 let userName = html.match(/username.....(.*?)\\"/)[1]
                 let userid = html.match(/viewerId.....(.*?)\\"/)[1]
-                console.log(userName)
+                console.log(userName, userid)
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
+                headers.queryhash = ''
                 let profile = await GetProfile(userid, userName, headers)
                 profile.result.query_hash = await findNonce(nonceApi)
                 console.log(profile.result)
@@ -44,7 +45,7 @@ export async function LoginApi(headers) {
         }
     } catch (error) {
         console.log(error)
-        return error
+        return new ErrorModel(404, "Something went wrong ")
     }
 }
 
