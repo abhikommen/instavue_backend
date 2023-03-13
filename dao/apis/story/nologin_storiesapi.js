@@ -48,14 +48,17 @@ const GetHightlight = async (userId, userName, headers) => {
             if (apiResult !== null) {
 
                 var profileEntity = await GetProfile(userId, userName, headers)
-                var jsonResponse = await apiResult.json()
+                console.log(profileEntity.result)
 
+                var jsonResponse = await apiResult.json()
                 jsonResponse.forEach((story) => {
                     var item = {}
 
                     item.time = getUTCTimeHighLight(story.createdTime)
-                    item.id = profileEntity.id
-                    item.user = profileEntity
+                    item.id = profileEntity.result.id
+                    item.user_id = profileEntity.result.id
+
+                    item.user = profileEntity.result
                     item.image_url = story.thumbnailUrl
 
                     item.accessibility_caption = null
@@ -64,6 +67,7 @@ const GetHightlight = async (userId, userName, headers) => {
                     if (videoUrl != null) {
                         item.video_url = videoUrl
                         item.video_duration = 100
+                        item.is_video = true
                     }
 
                     storyList.push(item)
@@ -127,6 +131,7 @@ const GetStory = async (id, headers) => {
 
                         item.time = getUTCTime(story.createdTime)
                         item.id = profileEntity.id
+                        item.user_id = profileEntity.id
                         item.user = profileEntity
                         item.image_url = story.thumbnailUrl
 
@@ -136,6 +141,7 @@ const GetStory = async (id, headers) => {
                         if (videoUrl != null) {
                             item.video_url = videoUrl
                             item.video_duration = 100
+                            item.is_video = true
                         }
 
                         storyList.push(item)

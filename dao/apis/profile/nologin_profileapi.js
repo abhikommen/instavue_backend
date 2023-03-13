@@ -40,6 +40,7 @@ const NoLoginProfileApi = async (userName, headers) => {
                         jsonResponse.accountInfo.followedByCount,
                         jsonResponse.accountInfo.biography,
                         '',
+                        false
                     )
                     return new ResultResponse(statusCode, profileEntity)
                 } else {
