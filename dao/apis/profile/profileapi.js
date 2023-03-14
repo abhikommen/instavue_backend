@@ -1,6 +1,6 @@
 import LoginProfileApi from './login_profileapi.js';
 import NoLoginProfileApi from './nologin_profileapi.js';
-
+import ErrorModel from '../../model/error.js';
 
 export async function GetProfile(userId, userName, headers) {
   try {

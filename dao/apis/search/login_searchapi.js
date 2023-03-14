@@ -1,23 +1,13 @@
-import { CheckSession } from '../../util/util.js'
-import ProfileEntity from '../model/profilemodel.js'
-import ErrorModel from '../model/error.js'
-import ResultResponse from '../model/resultresponse.js'
+
+import { CheckSession } from '../../../util/util.js'
+import ProfileEntity from '../../model/profilemodel.js'
+import ErrorModel from '../../model/error.js'
+import ResultResponse from '../../model/resultresponse.js'
 import fetch from 'node-fetch';
-import testingHeader from '../model/testingheader.js'
 
-let retrying = 4
-
-export async function SearchProfile(userName, headers) {
+const LoginSearchApi = async (userName, headers) => {
 
     try {
-
-        delete headers.host;
-        if (headers.cookie === undefined) {
-            headers.cookie = "ds_user_id=" + getRandomArbitrary(11111, 555555)
-        }
-
-        console.log(headers)
-
         let result = await fetch(`https://i.instagram.com/api/v1/web/search/topsearch/?context=blended&query=${userName}`, {
             "headers": headers,
             "body": null,
@@ -44,23 +34,16 @@ export async function SearchProfile(userName, headers) {
                 jsonArray.push(profileEntity)
             })
             return new ResultResponse(code, jsonArray)
+            
         } else {
-            if(retrying > 0){
-               retrying--
-               delete headers.cookie
-               return await SearchProfile(userName, headers)
-            } else {
-                retrying = 4
-                console.log("Search Error: ", await result.text())
-                return new ErrorModel(440, "Session Expire!!")
-            }
+            console.log("Search Error: Login ", await result.text(), userName)
+            return new ErrorModel(code, "Session Expire!!")
         }
     } catch (error) {
-        return error
+        return new ErrorModel(404, "Something went wrong : " + error)
     }
 
 }
 
-function getRandomArbitrary(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-}
+
+export default LoginSearchApi

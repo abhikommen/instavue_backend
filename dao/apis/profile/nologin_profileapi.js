@@ -6,6 +6,8 @@ import fetch from 'node-fetch';
 
 const TAG = "ProfileApiTag"
 
+let retry = 3
+
 const NoLoginProfileApi = async (userName, headers) => {
     try {
         const apiResult = await fetch("https://instanavigation.com/get-user-info", {
@@ -27,28 +29,39 @@ const NoLoginProfileApi = async (userName, headers) => {
         if (statusCode === 200) {
 
             const jsonResponse = await apiResult.json()
-            try {
-                if (apiResult !== null) {
-                    var profileEntity = new ProfileEntity(
-                        jsonResponse.accountInfo.id,
-                        jsonResponse.accountInfo.username,
-                        jsonResponse.accountInfo.fullName,
-                        jsonResponse.accountInfo.isPrivate,
-                        jsonResponse.accountInfo.profilePicUrl,
-                        false,
-                        jsonResponse.accountInfo.followsCount,
-                        jsonResponse.accountInfo.followedByCount,
-                        jsonResponse.accountInfo.biography,
-                        '',
-                        false
-                    )
-                    return new ResultResponse(statusCode, profileEntity)
-                } else {
-                    return new ErrorModel(404, "User not found")
+
+            if (retry <= 0) {
+                return new ErrorModel(404, "User not found")
+            }
+
+            if (jsonResponse.found === false && retry > 0) {
+                retry--
+                return await NoLoginProfileApi(userName, headers)
+            } else {
+                retry = 3
+                try {
+                    if (apiResult !== null && (jsonResponse.found === true)) {
+                        var profileEntity = new ProfileEntity(
+                            jsonResponse.accountInfo.id,
+                            jsonResponse.accountInfo.username,
+                            jsonResponse.accountInfo.fullName,
+                            jsonResponse.accountInfo.isPrivate,
+                            jsonResponse.accountInfo.profilePicUrl,
+                            jsonResponse.accountInfo.isPrivates,
+                            jsonResponse.accountInfo.followsCount,
+                            jsonResponse.accountInfo.followedByCount,
+                            jsonResponse.accountInfo.biography,
+                            '',
+                            false
+                        )
+                        return new ResultResponse(statusCode, profileEntity)
+                    } else {
+                        return new ErrorModel(404, "User not found")
+                    }
+                } catch (e) {
+                    console.log(TAG, e)
+                    return new ErrorModel(500, "Something went wrong. Error : " + e)
                 }
-            } catch (e) {
-                console.log(TAG, e)
-                return new ErrorModel(500, "Something went wrong. Error : " + e)
             }
         } else {
             console.log(TAG, "Error:", await result.text())
