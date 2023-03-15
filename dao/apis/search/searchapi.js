@@ -9,7 +9,7 @@ export async function SearchProfile(userName, headers) {
         delete headers.host;
 
         let isLoggedInRequest = true
-        if (headers.queryhash === undefined || headers.cookie === undefined) {
+        if (headers.queryhash === undefined) {
             isLoggedInRequest = false
         }
 

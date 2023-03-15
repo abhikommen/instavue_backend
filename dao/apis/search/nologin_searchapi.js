@@ -1,9 +1,6 @@
-import { CheckSession } from '../../../util/util.js'
-import ProfileEntity from '../../model/profilemodel.js'
 import ErrorModel from '../../model/error.js'
 import ResultResponse from '../../model/resultresponse.js'
 import { GetProfile } from '../profile/profileapi.js'
-import fetch from 'node-fetch';
 
 
 const NoLoginSearchApi = async (userName, headers) => {

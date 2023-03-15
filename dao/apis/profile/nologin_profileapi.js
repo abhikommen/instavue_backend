@@ -10,6 +10,7 @@ let retry = 3
 
 const NoLoginProfileApi = async (userName, headers) => {
     try {
+        console.log('NoLoginProfileApi')
         const apiResult = await fetch("https://instanavigation.com/get-user-info", {
             "headers": {
                 "accept": "application/json, text/plain, */*",
@@ -26,14 +27,17 @@ const NoLoginProfileApi = async (userName, headers) => {
         });
 
         var statusCode = apiResult.status
+        console.log("called", statusCode, retry)
         if (statusCode === 200) {
 
             const jsonResponse = await apiResult.json()
 
             if (retry <= 0) {
+                retry = 3
                 return new ErrorModel(404, "User not found")
             }
 
+            console.log(userName, jsonResponse)
             if (jsonResponse.found === false && retry > 0) {
                 retry--
                 return await NoLoginProfileApi(userName, headers)

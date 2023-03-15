@@ -10,7 +10,7 @@ const LoginProfileApi = async (userId, headers) => {
 
     try {
         delete headers.host;
-
+        console.log('LoginProfileApi')
         let result = await fetch(`https://i.instagram.com/api/v1/users/${userId}/info`, {
             "headers": headers,
             "body": null,

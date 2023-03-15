@@ -17,7 +17,6 @@ const LoginSearchApi = async (userName, headers) => {
         var code = result.status
         console.log("Search Api Code : ", code)
         if (code === 200) {
-            retrying = 4
             var jsonResult = await CheckSession(result)
             var jsonArray = []
 

@@ -26,13 +26,14 @@ export async function LoginApi(headers) {
         if (code === 200) {
             try {
                 let html = await result.text()
-                let userName = html.match(/username.....(.*?)\\"/)[1]
+                let userName = html.match(/viewerId.....(.*?)\\"/)[1]
+                console.log(userName)
                 let userid = html.match(/viewerId.....(.*?)\\"/)[1]
-                console.log(userName, userid)
 
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 headers.queryhash = ''
                 let profile = await GetProfile(userid, userName, headers)
+                console.log("Login", profile)
                 profile.result.query_hash = await findNonce(nonceApi)
                 console.log(profile.result)
                 return new ResultResponse(code, profile.result)

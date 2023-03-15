@@ -31,7 +31,6 @@ export async function GetTimeline(userId, userName, headers) {
         resultJson.user = userInfo.result
         resultJson.story = storiesList.result
 
-
         return new ResultResponse(200, resultJson)
 
     } catch (error) {
