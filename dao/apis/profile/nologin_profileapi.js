@@ -1,11 +1,9 @@
-import { CheckSession } from '../../../util/util.js'
 import ProfileEntity from '../../model/profilemodel.js'
 import ErrorModel from '../../model/error.js'
 import ResultResponse from '../../model/resultresponse.js'
 import fetch from 'node-fetch';
 
 const TAG = "ProfileApiTag"
-
 let retry = 3
 
 const NoLoginProfileApi = async (userName, headers) => {
@@ -29,9 +27,7 @@ const NoLoginProfileApi = async (userName, headers) => {
         var statusCode = apiResult.status
         console.log("called", statusCode, retry)
         if (statusCode === 200) {
-
             const jsonResponse = await apiResult.json()
-
             if (retry <= 0) {
                 retry = 3
                 return new ErrorModel(404, "User not found")
@@ -45,13 +41,14 @@ const NoLoginProfileApi = async (userName, headers) => {
                 retry = 3
                 try {
                     if (apiResult !== null && (jsonResponse.found === true)) {
+
                         var profileEntity = new ProfileEntity(
                             jsonResponse.accountInfo.id,
                             jsonResponse.accountInfo.username,
                             jsonResponse.accountInfo.fullName,
                             jsonResponse.accountInfo.isPrivate,
                             jsonResponse.accountInfo.profilePicUrl,
-                            jsonResponse.accountInfo.isPrivates,
+                            jsonResponse.accountInfo.isVerified,
                             jsonResponse.accountInfo.followsCount,
                             jsonResponse.accountInfo.followedByCount,
                             jsonResponse.accountInfo.biography,
@@ -59,6 +56,7 @@ const NoLoginProfileApi = async (userName, headers) => {
                             false
                         )
                         return new ResultResponse(statusCode, profileEntity)
+
                     } else {
                         return new ErrorModel(404, "User not found")
                     }
@@ -74,7 +72,6 @@ const NoLoginProfileApi = async (userName, headers) => {
     } catch (error) {
         throw new ErrorModel(440, "Session Expire!!")
     }
-
 }
 
 export default NoLoginProfileApi

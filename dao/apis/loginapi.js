@@ -2,15 +2,20 @@ import ErrorModel from '../model/error.js'
 import ResultResponse from '../model/resultresponse.js'
 import fetch from 'node-fetch';
 import { GetProfile } from './profile/profileapi.js'
-import fs from 'fs'
+
+
+const TAG = "LoginApi"
+const ERRORTAG = "LoginApiError"
+
 
 export async function LoginApi(headers) {
     try {
         delete headers.host;
         delete headers["user-agent"];
-    
-        console.log(headers)
-        if (headers.cookie === undefined ) {
+
+        console.log(TAG, headers)
+
+        if (headers.cookie === undefined) {
             throw new ErrorModel(401, "Headers not preset.")
         }
 
@@ -19,7 +24,7 @@ export async function LoginApi(headers) {
             "body": null,
             "method": "GET"
         });
-    
+
         var code = result.status
         console.log(code)
 
@@ -27,25 +32,25 @@ export async function LoginApi(headers) {
             try {
                 let html = await result.text()
                 let userName = html.match(/viewerId.....(.*?)\\"/)[1]
-                console.log(userName)
                 let userid = html.match(/viewerId.....(.*?)\\"/)[1]
 
+                console.log(TAG, userName, userid)
                 let nonceApi = html.match(/<link.rel="preload".href="(.*?)".as="script"/g)
                 headers.queryhash = ''
                 let profile = await GetProfile(userid, userName, headers)
-                console.log("Login", profile)
                 profile.result.query_hash = await findNonce(nonceApi)
-                console.log(profile.result)
+                console.log(TAG, "Response:", profile.result)
                 return new ResultResponse(code, profile.result)
             } catch (e) {
+                console.log(TAG, "Error", profile.result)
                 throw new ErrorModel(440, "Login Failed : " + e)
             }
         } else {
-            console.log(await result.text())
+            console.log(ERRORTAG, await result.text())
             return new ErrorModel(440, "Session Expire!!")
         }
     } catch (error) {
-        console.log(error)
+        console.log(ERRORTAG, error)
         return new ErrorModel(404, "Something went wrong ")
     }
 }
@@ -53,7 +58,7 @@ export async function LoginApi(headers) {
 const findNonce = async (regexLinkArray) => {
     try {
         for (let linkRegex of regexLinkArray) {
-            try{
+            try {
                 let url = linkRegex.match(/href="([^"]*)/)[1];
                 let nonceResult = await fetch(url)
                 let nonceResponse = await nonceResult.text()
@@ -61,14 +66,14 @@ const findNonce = async (regexLinkArray) => {
                     let queryHash = nonceResponse.match(/(?<=;var.h=")(.*)(?=",i=d)/g)[0]
                     return queryHash
                 } catch {
-                    console.log("Couldn't find url... ")
+                    console.log(ERRORTAG, "Couldn't find nonce url... ")
                 }
-            } catch (e){
-
+            } catch (e) {
+                console.log(ERRORTAG, "Error getting query hash", e)
             }
         }
-    } catch(error){
-        //return "na"
+    } catch (error) {
+        console.log(ERRORTAG, "Error getting query hash", error)
     }
     return "na"
 }

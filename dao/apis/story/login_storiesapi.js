@@ -37,7 +37,8 @@ const LogInUserStories = async (userId, headers) => {
             reels.items.forEach((story) => {
                 var item = {}
                 item.time = story.taken_at
-                item.id = userId
+                item.id = story.id
+                item.user_id = userId
                 item.user = user
                 item.image_url = story.image_versions2.candidates[0].url
 
